@@ -1,6 +1,6 @@
-# pc-mon-server
+# pc-mon-client
 
-> A WebSocket server built in NodeJS for sending PC status information
+> A Vue JS Client to display data from [pc-mon-server](https://github.com/MatthewCash/pc-mon-server)
 
 ## Production Instructions
 
@@ -8,6 +8,6 @@
 # install dependencies
 $ npm install
 
-# start server
-$ node main
+# build app
+$ npm run build
 ```
