@@ -1,24 +1,13 @@
-# pc-mon-client
+# pc-mon-server
 
-## Project setup
-```
-yarn install
-```
+> A WebSocket server built in NodeJS for sending PC status information
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## Production Instructions
 
-### Compiles and minifies for production
-```
-yarn build
-```
+```bash
+# install dependencies
+$ npm install
 
-### Lints and fixes files
+# start server
+$ node main
 ```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
