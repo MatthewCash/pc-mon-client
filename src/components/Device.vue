@@ -5,24 +5,16 @@
             class="fixed h-screen w-screen"
             :class="[cd === 0 ? 'connecting' : 'disconnected']"
         >
-            <div class="center">
-                {{ cd === 0 ? 'CONNECTING' : 'DISCONNECTED' }}
-            </div>
+            <div class="center">{{ cd === 0 ? 'CONNECTING' : 'DISCONNECTED' }}</div>
         </div>
         <div class="flex max-h-screen">
             <div class="w-2/4">
                 <div>
-                    <MemUsage
-                        :pause="pause"
-                        :usage="memory.usage"
-                        :max="memory.max"
-                    />
+                    <MemUsage :pause="pause" :usage="memory.usage" :max="memory.max" />
                 </div>
                 <div class="p-12" style="height: 50%">
                     <div class="bg-gray-900 h-full p-4 font-mono">
-                        <div class="text-center sysinfo">
-                            System Information
-                        </div>
+                        <div class="text-center sysinfo">System Information</div>
                         <hr class="my-3 border border-gray-700" />
                         <div>
                             <span class="font-bold">MEMORY:</span>
@@ -32,11 +24,13 @@
                         </div>
                         <div>
                             <span class="font-bold">CPU:</span>
-                            {{ Math.floor(cpu.usage) }}% <small>Total</small>
+                            {{ Math.floor(cpu.usage) }}%
+                            <small>Total</small>
                         </div>
                         <div>
                             <span class="font-bold">NETWORK:</span>
-                            {{ network.tx }}B <small>Sent</small>
+                            {{ network.tx }}B
+                            <small>Sent</small>
                             {{ network.rx }}B
                             <small>Received</small>
                         </div>
@@ -58,14 +52,14 @@
 </template>
 
 <script>
-import MemUsage from './charts/MemUsage.vue';
-import CPU from './charts/CPU.vue';
+import MemUsage from "./charts/MemUsage.vue";
+import CPU from "./charts/CPU.vue";
 export default {
     components: {
         MemUsage,
         CPU
     },
-    props: ['address', 'secure'],
+    props: ["address", "secure"],
     data() {
         return {
             ws: { readyState: 3 },
@@ -74,7 +68,7 @@ export default {
             pause: true,
             chartData: {
                 labels: [],
-                datasets: [{ label: 'Used', data: [] }]
+                datasets: [{ label: "Used", data: [] }]
             },
             staticData: {
                 memLayout: [{ size: 0 }]
@@ -115,21 +109,24 @@ export default {
     },
     methods: {
         connect() {
-            console.log('Connecting to ' + this.address);
+            console.log("Connecting to " + this.address);
             this.ws = null;
             this.ws = new WebSocket(
-                (this.secure === 'true' ? 'wss://' : 'ws://') + this.address
+                (this.secure === "true" ? "wss://" : "ws://") + this.address
             );
 
-            this.ws.addEventListener('open', this.open);
-            this.ws.addEventListener('message', this.message);
-            this.ws.addEventListener('close', this.close);
-            this.ws.addEventListener('error', this.error);
+            this.ws.addEventListener("open", this.open);
+            this.ws.addEventListener("message", this.message);
+            this.ws.addEventListener("close", this.close);
+            this.ws.addEventListener("error", this.error);
 
             this.pause = true;
         },
         open(event) {
-            console.log('Connected to ' + this.address);
+            console.log("Connected to " + this.address);
+            this.ws.send(
+                "9M%*q*tJ=Lt5)&BvgMs25aC$S<4vErs}g9CGz9?qE2@,z4Z93~S!.3j;yG8<RGy3"
+            );
             this.cd = 1;
 
             this.pause = false;
@@ -137,7 +134,7 @@ export default {
         message(event) {
             this.active = true;
 
-            if (event.data == 'Connected!') return;
+            if (event.data == "Connected!") return;
 
             let parsed = JSON.parse(event.data);
             this.staticData = parsed.staticData;
@@ -160,12 +157,12 @@ export default {
             );
         },
         close(event) {
-            console.log('Disconnected from ' + this.address);
+            console.log("Disconnected from " + this.address);
 
             this.pause = true;
         },
         error(event) {
-            console.log('Error from ' + this.address);
+            console.log("Error from " + this.address);
         }
     }
 };

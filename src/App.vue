@@ -5,10 +5,10 @@
 </template>
 
 <script>
-import Device from './components/Device.vue';
+import Device from "./components/Device.vue";
 
 export default {
-    name: 'app',
+    name: "app",
     components: {
         Device
     }
