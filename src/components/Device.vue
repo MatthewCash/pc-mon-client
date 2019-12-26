@@ -125,7 +125,7 @@ export default {
         open(event) {
             console.log("Connected to " + this.address);
             console.log("Authenticating...");
-            this.ws.send(process.env.TOKEN);
+            this.ws.send(process.env.VUE_APP_TOKEN);
             this.cd = 1;
 
             this.pause = false;
