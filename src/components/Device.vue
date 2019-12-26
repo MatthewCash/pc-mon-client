@@ -125,9 +125,7 @@ export default {
         open(event) {
             console.log("Connected to " + this.address);
             console.log("Authenticating...");
-            this.ws.send(
-                "9M%*q*tJ=Lt5)&BvgMs25aC$S<4vErs}g9CGz9?qE2@,z4Z93~S!.3j;yG8<RGy3"
-            );
+            this.ws.send(process.env.TOKEN);
             this.cd = 1;
 
             this.pause = false;
