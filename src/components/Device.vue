@@ -18,13 +18,13 @@
                         <hr class="my-3 border border-gray-700" />
                         <div>
                             <span class="font-bold">MEMORY:</span>
-                            {{ Math.floor((memory.usage / memory.max) * 100) }}%
-                            | {{ Math.round(memory.usage / 1000000) }}M /
+                            {{ Math.floor((memory.tweenedUsage / memory.max) * 100) }}%
+                            | {{ Math.round(memory.tweenedUsage / 1000000) }}M /
                             {{ Math.round(memory.max / 1000000) }}M
                         </div>
                         <div>
                             <span class="font-bold">CPU:</span>
-                            {{ Math.floor(cpu.usage) }}%
+                            {{ Math.floor(cpu.tweenedUsage) }}%
                             <small>Total</small>
                         </div>
                         <div>
@@ -54,6 +54,8 @@
 <script>
 import MemUsage from "./charts/MemUsage.vue";
 import CPU from "./charts/CPU.vue";
+import { Tween, autoPlay } from "es6-tween";
+autoPlay(true);
 export default {
     components: {
         MemUsage,
@@ -75,11 +77,13 @@ export default {
             },
             memory: {
                 usage: 0,
+                tweenedUsage: 0,
                 max: 0
             },
             cpu: {
                 cores: [],
-                usage: 0
+                usage: 0,
+                tweenedUsage: 0
             },
             network: {
                 rx: 0,
@@ -94,6 +98,22 @@ export default {
                 memory += mem.size;
             });
             this.memory.max = Math.round(memory * 0.931322578);
+        },
+        "memory.usage"(value, old) {
+            new Tween({ x: old })
+                .to({ x: value }, 1000)
+                .on("update", ({ x }) => {
+                    this.memory.tweenedUsage = x;
+                })
+                .start();
+        },
+        "cpu.usage"(value, old) {
+            new Tween({ x: old })
+                .to({ x: value }, 1000)
+                .on("update", ({ x }) => {
+                    this.cpu.tweenedUsage = x;
+                })
+                .start();
         }
     },
     created() {
@@ -103,7 +123,7 @@ export default {
             this.connect();
         }, 1000);
         setInterval(() => {
-            if (!this.active) this.ws.close();
+            if (!this.active && this.ws.readyState != 0) this.ws.close();
             this.active = false;
         }, 5000);
     },
@@ -133,9 +153,11 @@ export default {
         message(event) {
             this.active = true;
 
-            if (event.data == "Connected!") return;
-
-            let parsed = JSON.parse(event.data);
+            try {
+                var parsed = JSON.parse(event.data);
+            } catch (error) {
+                return;
+            }
             this.staticData = parsed.staticData;
 
             this.memory.usage = parsed.dynamicData.mem.used * 0.931322578;
@@ -148,12 +170,8 @@ export default {
             usage /= this.cpu.cores.length;
             this.cpu.usage = usage;
 
-            this.network.tx = Math.floor(
-                parsed.dynamicData.networkStats[0].tx_sec
-            );
-            this.network.rx = Math.floor(
-                parsed.dynamicData.networkStats[0].rx_sec
-            );
+            this.network.tx = Math.floor(parsed.dynamicData.network[0].tx_sec);
+            this.network.rx = Math.floor(parsed.dynamicData.network[0].rx_sec);
         },
         close(event) {
             console.log("Disconnected from " + this.address);
