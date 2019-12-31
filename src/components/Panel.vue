@@ -133,12 +133,15 @@ export default {
             this.canUpdate = false;
             setTimeout(() => void (this.canUpdate = true), 2500);
         }, 500);
-        setInterval(async () => {
+        this.statusInterval = setInterval(async () => {
             let { data } = await axios.get("http://satelite:1729/status");
             if (!data) return;
 
             this.status = data;
         }, 1000);
+    },
+    beforeDestroy() {
+        clearInterval(this.statusInterval);
     }
 };
 </script>
