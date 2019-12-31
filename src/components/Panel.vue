@@ -154,4 +154,8 @@ html {
 *:after {
     box-sizing: inherit;
 }
+
+.rcp__palette:before {
+    background-color: black;
+}
 </style>
