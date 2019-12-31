@@ -56,6 +56,7 @@ import MemUsage from "./charts/MemUsage.vue";
 import CPU from "./charts/CPU.vue";
 import { Tween, autoPlay } from "es6-tween";
 autoPlay(true);
+
 export default {
     components: {
         MemUsage,

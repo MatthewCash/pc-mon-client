@@ -7,6 +7,8 @@
         "build": "vue-cli-service build"
     },
     "dependencies": {
+        "@radial-color-picker/vue-color-picker": "^2.3.0",
+        "axios": "^0.19.0",
         "chart.js": "^2.8.0",
         "chartjs-plugin-streaming": "^1.8.0",
         "core-js": "^2.6.11",
@@ -14,6 +16,7 @@
         "tailwindcss": "^1.1.4",
         "vue": "^2.6.11",
         "vue-chartjs": "^3.5.0",
+        "vue2-hammer": "^2.1.2",
         "vuex": "^3.1.2"
     },
     "devDependencies": {
