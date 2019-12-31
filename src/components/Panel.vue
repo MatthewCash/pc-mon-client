@@ -155,11 +155,11 @@ export default {
     },
     created() {
         this.connect();
-        setInterval(() => {
+        this.reconnectInterval = setInterval(() => {
             if (this.ws.readyState != 3) return;
             this.connect();
         }, 1000);
-        setInterval(() => {
+        this.deadInterval = setInterval(() => {
             if (!this.active && this.ws.readyState != 0) this.ws.close();
             this.active = false;
         }, 5000);
@@ -173,6 +173,8 @@ export default {
     },
     beforeDestroy() {
         clearInterval(this.statusInterval);
+        clearInterval(this.reconnectInterval);
+        clearInterval(this.deadInterval);
         this.ws.close();
     }
 };
