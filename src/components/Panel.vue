@@ -30,7 +30,6 @@
 
 <script>
 import ColorPicker from "@radial-color-picker/vue-color-picker";
-import axios from "axios";
 import { Tween, autoPlay } from "es6-tween";
 autoPlay(true);
 
@@ -38,6 +37,7 @@ export default {
     components: { ColorPicker },
     data() {
         return {
+            ws: { readyState: 3 },
             color: {
                 hue: 50,
                 saturation: 100,
@@ -113,35 +113,67 @@ export default {
             this.postColor();
         },
         togglePower() {
-            axios.post("http://satelite:1729/power", {
-                power: !this.status.on_off
-            });
-            // this.status.on_off = !this.status.on_off;
+            this.ws.send(JSON.stringify({ power: !this.status.on_off }));
         },
         toggleCycle() {
-            axios.post("http://satelite:1729/cycle", {
-                cycle: !this.status.cycle
-            });
-            // this.status.cycle = !this.status.cycle;
+            this.ws.send(JSON.stringify({ cycle: !this.status.cycle }));
+        },
+        open(event) {
+            console.log("Connected to " + this.address);
+            this.cd = 1;
+
+            this.pause = false;
+        },
+        connect() {
+            console.log("Connecting to " + this.address);
+            this.ws = null;
+            this.ws = new WebSocket("ws://satelite:1728");
+
+            this.ws.addEventListener("open", this.open);
+            this.ws.addEventListener("message", this.message);
+            this.ws.addEventListener("close", this.close);
+            this.ws.addEventListener("error", this.error);
+
+            this.pause = true;
+        },
+        message(event) {
+            this.active = true;
+
+            let parsed = JSON.parse(event.data);
+            if (!parsed) return;
+
+            this.status = parsed;
+        },
+        close(event) {
+            console.log("Disconnected from " + this.address);
+
+            this.pause = true;
+        },
+        error(event) {
+            console.log("Error from " + this.address);
         }
     },
     created() {
+        this.connect();
+        setInterval(() => {
+            if (this.ws.readyState != 3) return;
+            this.connect();
+        }, 1000);
+        setInterval(() => {
+            if (!this.active && this.ws.readyState != 0) this.ws.close();
+            this.active = false;
+        }, 5000);
+
         this.postColor = this.throttle(() => {
-            axios.post("http://satelite:1729/color", {
-                color: this.color.hue
-            });
+            this.ws.send(JSON.stringify({ color: this.color.hue }));
+
             this.canUpdate = false;
             setTimeout(() => void (this.canUpdate = true), 2500);
         }, 500);
-        this.statusInterval = setInterval(async () => {
-            let { data } = await axios.get("http://satelite:1729/status");
-            if (!data) return;
-
-            this.status = data;
-        }, 1000);
     },
     beforeDestroy() {
         clearInterval(this.statusInterval);
+        this.ws.close();
     }
 };
 </script>
