@@ -34,6 +34,7 @@ export default {
             new Tween({ x: old })
                 .to({ x: value }, 2200)
                 .on("update", ({ x }) => {
+                    if (!this.canUpdate) return;
                     this.pos = x;
                 })
                 .easing(this.cycle ? Easing.Linear : Easing.Quadratic.InOut)
