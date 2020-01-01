@@ -1,17 +1,21 @@
 <template>
     <div class="fixed m-5" style="width: 95.5%">
         <div class="flex justify-center">
-            <color-picker class="bg-transparent z-20 m-5" v-bind="color" @input="setColor"></color-picker>
+            <!-- <color-picker class="bg-transparent z-20 m-5" v-bind="color" @input="setColor"></color-picker> -->
+            <Wheel :cycle="status.cycle" :hue="hue" @update:hue="setHue($event)" />
         </div>
         <hr class="my-20" />
         <div class="flex justify-center">
             <div
                 @click="togglePower()"
                 class="rounded-lg bg-gray-800 hover:bg-gray-700 active:bg-gray-600 p-5 mr-10"
+                :class="{ 'p-16': click.power }"
+                style="animation: 1s linear"
             >
                 <div
-                    class="w-full h-full p-16 rounded-lg"
-                    :class="{ 'bg-gray-500': status.on_off }"
+                    class="w-full h-full rounded-lg"
+                    :class="{ 'bg-gray-500': status.on_off, 'p-16': !click.power, 'p-5': click.power }"
+                    style="animation: 1s linear"
                 >Power {{ status.on_off ? 'Off' : 'On' }}</div>
             </div>
             <div
@@ -21,7 +25,7 @@
                 <div
                     class="w-full h-full p-16 rounded-lg"
                     :class="{ cycle: status.cycle }"
-                    :style="{ 'background-color': status.cycle ? `hsl(${this.color.hue}, 100%, 50%` : ''}"
+                    :style="{ 'background-color': status.cycle ? `hsl(${'45'}, 100%, 50%` : ''}"
                 >Cycle {{ status.cycle ? 'Off' : 'On' }}</div>
             </div>
         </div>
@@ -29,21 +33,16 @@
 </template>
 
 <script>
-import ColorPicker from "@radial-color-picker/vue-color-picker";
+import Wheel from "./ColorWheel";
 import { Tween, autoPlay } from "es6-tween";
 autoPlay(true);
 
 export default {
-    components: { ColorPicker },
+    components: { Wheel },
     data() {
         return {
             ws: { readyState: 3 },
-            color: {
-                hue: 50,
-                saturation: 100,
-                luminosity: 50,
-                alpha: 1
-            },
+            hue: 0,
             canUpdate: true,
             status: {
                 on_off: 0,
@@ -55,25 +54,12 @@ export default {
                 brightness: 0,
                 err_code: 0,
                 cycle: false
+            },
+            click: {
+                power: false,
+                cycle: false
             }
         };
-    },
-    watch: {
-        "status.hue"(value, old) {
-            if (!this.canUpdate || this.$children[0].isDragging) return;
-
-            old = this.color.hue;
-
-            if (old > value && old - value > 180) old -= 360;
-            if (value > old && value - old > 180) old += 360;
-
-            new Tween({ x: old })
-                .to({ x: value }, 2200)
-                .on("update", ({ x }) => {
-                    this.color.hue = x;
-                })
-                .start();
-        }
     },
     methods: {
         throttle(func, wait, options) {
@@ -107,16 +93,13 @@ export default {
                 return result;
             };
         },
-        setColor(input) {
-            let hue = Math.round(input);
-            this.color.hue = hue;
-            this.postColor();
-        },
         togglePower() {
             this.ws.send(JSON.stringify({ power: !this.status.on_off }));
+            this.click.power = true;
         },
         toggleCycle() {
             this.ws.send(JSON.stringify({ cycle: !this.status.cycle }));
+            this.click.cycle = true;
         },
         open(event) {
             console.log("Connected to " + this.address);
@@ -143,6 +126,7 @@ export default {
             if (!parsed) return;
 
             this.status = parsed;
+            this.hue = parsed.hue;
         },
         close(event) {
             console.log("Disconnected from " + this.address);
@@ -151,6 +135,11 @@ export default {
         },
         error(event) {
             console.log("Error from " + this.address);
+        },
+        setHue(input) {
+            let hue = Math.round(input);
+            this.hue = hue;
+            this.postColor();
         }
     },
     created() {
@@ -165,7 +154,7 @@ export default {
         }, 5000);
 
         this.postColor = this.throttle(() => {
-            this.ws.send(JSON.stringify({ color: this.color.hue }));
+            this.ws.send(JSON.stringify({ color: this.hue }));
 
             this.canUpdate = false;
             setTimeout(() => void (this.canUpdate = true), 2500);
@@ -181,8 +170,6 @@ export default {
 </script>
 
 <style>
-@import "~@radial-color-picker/vue-color-picker/dist/vue-color-picker.min.css";
-
 html {
     box-sizing: border-box;
 }
@@ -190,9 +177,5 @@ html {
 *:before,
 *:after {
     box-sizing: inherit;
-}
-
-.rcp__palette:before {
-    background-color: black;
 }
 </style>
