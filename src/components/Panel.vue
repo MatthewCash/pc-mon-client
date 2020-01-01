@@ -1,20 +1,30 @@
 <template>
     <div class="fixed m-5" style="width: 95.5%">
         <div class="flex justify-center">
-            <!-- <color-picker class="bg-transparent z-20 m-5" v-bind="color" @input="setColor"></color-picker> -->
+            <div class="linear-dial brightness" ref="brightness">
+                <div
+                    class="picker"
+                    :style="{ 'margin-top': `${(100 - brightness) * 2.94}px`, transition: clicked.brightness ? '' : 'all 1s ease-in-out 0s' }"
+                ></div>
+            </div>
             <Wheel :cycle="status.cycle" :hue="hue" @update:hue="setHue($event)" />
+            <div class="linear-dial white" ref="white">
+                <div
+                    class="picker"
+                    :style="{ 'margin-top': `${(white - 2500) / 22 }px`, transition: clicked.white ? '' : 'all 1s ease-in-out 0s' }"
+                ></div>
+            </div>
         </div>
         <hr class="my-20" />
         <div class="flex justify-center">
             <div
                 @click="togglePower()"
                 class="rounded-lg bg-gray-800 hover:bg-gray-700 active:bg-gray-600 p-5 mr-10"
-                :class="{ 'p-16': click.power }"
                 style="animation: 1s linear"
             >
                 <div
-                    class="w-full h-full rounded-lg"
-                    :class="{ 'bg-gray-500': status.on_off, 'p-16': !click.power, 'p-5': click.power }"
+                    class="w-full h-full p-16 rounded-lg"
+                    :class="{ 'bg-gray-500': status.on_off }"
                     style="animation: 1s linear"
                 >Power {{ status.on_off ? 'Off' : 'On' }}</div>
             </div>
@@ -43,7 +53,8 @@ export default {
         return {
             ws: { readyState: 3 },
             hue: 0,
-            canUpdate: true,
+            brightness: 0,
+            white: 0,
             status: {
                 on_off: 0,
                 mode: "normal",
@@ -55,9 +66,18 @@ export default {
                 err_code: 0,
                 cycle: false
             },
-            click: {
+            clicked: {
                 power: false,
-                cycle: false
+                cycle: false,
+                brightness: false,
+                white: false
+            },
+            canUpdate: {
+                power: true,
+                cycle: true,
+                hue: true,
+                brightness: true,
+                white: true
             }
         };
     },
@@ -95,11 +115,9 @@ export default {
         },
         togglePower() {
             this.ws.send(JSON.stringify({ power: !this.status.on_off }));
-            this.click.power = true;
         },
         toggleCycle() {
             this.ws.send(JSON.stringify({ cycle: !this.status.cycle }));
-            this.click.cycle = true;
         },
         open(event) {
             console.log("Connected to " + this.address);
@@ -127,6 +145,9 @@ export default {
 
             this.status = parsed;
             this.hue = parsed.hue;
+
+            if (this.canUpdate.brightness) this.brightness = parsed.brightness;
+            if (this.canUpdate.white) this.white = parsed.color_temp;
         },
         close(event) {
             console.log("Disconnected from " + this.address);
@@ -140,6 +161,64 @@ export default {
             let hue = Math.round(input);
             this.hue = hue;
             this.postColor();
+        },
+        brightnessClick(event) {
+            this.clicked.brightness = true;
+            this.brightnessAdjust(event);
+
+            this.canUpdate.brightness = false;
+            clearTimeout(this.brightnessTimeout);
+        },
+        brightnessUnClick() {
+            this.clicked.brightness = false;
+
+            this.brightnessTimeout = setTimeout(
+                () => (this.canUpdate.brightness = true),
+                1000
+            );
+        },
+        brightnessAdjust(event) {
+            if (!this.clicked.brightness) return;
+
+            const point = event.targetTouches ? event.targetTouches[0] : event;
+            const box = this.$refs.brightness.getBoundingClientRect();
+
+            let percent = (point.clientY - box.top) / box.height;
+            if (percent < 0) percent = 0;
+            if (percent > 1) percent = 1;
+
+            this.brightness = 100 - percent * 100;
+
+            this.postBrightness();
+        },
+        whiteClick(event) {
+            this.clicked.white = true;
+            this.whiteAdjust(event);
+
+            this.canUpdate.white = false;
+            clearTimeout(this.whiteTimeout);
+        },
+        whiteUnClick() {
+            this.clicked.white = false;
+
+            this.whiteTimeout = setTimeout(
+                () => (this.canUpdate.white = true),
+                1000
+            );
+        },
+        whiteAdjust(event) {
+            if (!this.clicked.white) return;
+
+            const point = event.targetTouches ? event.targetTouches[0] : event;
+            const box = this.$refs.white.getBoundingClientRect();
+
+            let percent = (point.clientY - box.top) / box.height;
+            if (percent < 0) percent = 0;
+            if (percent > 1) percent = 1;
+
+            this.white = percent * 6500 + 2500;
+
+            this.postWhite();
         }
     },
     created() {
@@ -155,21 +234,111 @@ export default {
 
         this.postColor = this.throttle(() => {
             this.ws.send(JSON.stringify({ color: this.hue }));
-
-            this.canUpdate = false;
-            setTimeout(() => void (this.canUpdate = true), 2500);
         }, 500);
+
+        this.postBrightness = this.throttle(() => {
+            this.ws.send(
+                JSON.stringify({ brightness: Math.round(this.brightness) })
+            );
+        }, 500);
+
+        this.postWhite = this.throttle(() => {
+            this.ws.send(JSON.stringify({ white: Math.round(this.white) }));
+        }, 500);
+    },
+    mounted() {
+        this.$refs.brightness.addEventListener(
+            "mousedown",
+            this.brightnessClick,
+            {
+                passive: true
+            }
+        );
+        document.addEventListener("mouseup", this.brightnessUnClick, {
+            passive: true
+        });
+        document.addEventListener("mousemove", this.brightnessAdjust, {
+            passive: false
+        });
+        document.addEventListener("mouseleave", this.brightnessUnClick, {
+            passive: true
+        });
+        this.$refs.brightness.addEventListener(
+            "touchstart",
+            this.brightnessClick,
+            { passive: true }
+        );
+        document.addEventListener("tochend", this.brightnessUnClick, {
+            passive: true
+        });
+        document.addEventListener("touchmove", this.brightnessAdjust, {
+            passive: false
+        });
+        document.addEventListener("touchcancel", this.brightnessUnClick, {
+            passive: true
+        });
+
+        this.$refs.white.addEventListener("mousedown", this.whiteClick, {
+            passive: true
+        });
+        document.addEventListener("mouseup", this.whiteUnClick, {
+            passive: true
+        });
+        document.addEventListener("mousemove", this.whiteAdjust, {
+            passive: false
+        });
+        document.addEventListener("mouseleave", this.whiteUnClick, {
+            passive: true
+        });
+        this.$refs.white.addEventListener("touchstart", this.whiteClick, {
+            passive: true
+        });
+        document.addEventListener("tochend", this.whiteUnClick, {
+            passive: true
+        });
+        document.addEventListener("touchmove", this.whiteAdjust, {
+            passive: false
+        });
+        document.addEventListener("touchcancel", this.whiteUnClick, {
+            passive: true
+        });
     },
     beforeDestroy() {
         clearInterval(this.statusInterval);
         clearInterval(this.reconnectInterval);
         clearInterval(this.deadInterval);
         this.ws.close();
+        this.$refs.brightness.addEventListener(
+            "mousedown",
+            this.brightnessClick,
+            {
+                passive: true
+            }
+        );
+        document.removeEventListener("mouseup", this.brightnessUnClick);
+        document.removeEventListener("mousemove", this.brightnessAdjust);
+        document.removeEventListener("mouseleave", this.brightnessUnClick);
+        this.$refs.brightness.removeEventListener(
+            "touchstart",
+            this.brightnessClick
+        );
+        document.removeEventListener("tochend", this.brightnessUnClick);
+        document.removeEventListener("touchmove", this.brightnessAdjust);
+        document.removeEventListener("touchcancel", this.brightnessUnClick);
+
+        this.$refs.white.removeEventListener("mousedown", this.whiteClick);
+        document.removeEventListener("mouseup", this.whiteUnClick);
+        document.removeEventListener("mousemove", this.whiteAdjust);
+        document.removeEventListener("mouseleave", this.whiteUnClick);
+        this.$refs.white.removeEventListener("touchstart", this.whiteClick);
+        document.removeEventListener("tochend", this.whiteUnClick);
+        document.removeEventListener("touchmove", this.whiteAdjust);
+        document.removeEventListener("touchcancel", this.whiteUnClick);
     }
 };
 </script>
 
-<style>
+<style scoped>
 html {
     box-sizing: border-box;
 }
@@ -177,5 +346,27 @@ html {
 *:before,
 *:after {
     box-sizing: inherit;
+}
+.linear-dial {
+    border-radius: 30px;
+    height: 300px;
+    width: 100px;
+}
+.white {
+    margin-left: 50px;
+    background: linear-gradient(#ffb459, #b6ceff);
+}
+.brightness {
+    margin-right: 50px;
+    background: linear-gradient(white, #414141);
+}
+.picker {
+    height: 10px;
+    width: 100px;
+    margin-top: 50px;
+    background-color: rgb(235, 235, 235);
+    border-radius: 5px;
+    border-bottom-width: 1px;
+    border-color: #414141;
 }
 </style>
