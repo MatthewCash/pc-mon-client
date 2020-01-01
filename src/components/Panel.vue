@@ -268,7 +268,7 @@ export default {
             this.brightnessClick,
             { passive: true }
         );
-        document.addEventListener("tochend", this.brightnessUnClick, {
+        document.addEventListener("touchend", this.brightnessUnClick, {
             passive: true
         });
         document.addEventListener("touchmove", this.brightnessAdjust, {
@@ -293,7 +293,7 @@ export default {
         this.$refs.white.addEventListener("touchstart", this.whiteClick, {
             passive: true
         });
-        document.addEventListener("tochend", this.whiteUnClick, {
+        document.addEventListener("touchend", this.whiteUnClick, {
             passive: true
         });
         document.addEventListener("touchmove", this.whiteAdjust, {
