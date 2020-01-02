@@ -35,7 +35,8 @@
                 <div
                     class="w-full h-full p-16 rounded-lg"
                     :class="{ cycle: status.cycle }"
-                    :style="{ 'background-color': status.cycle ? `hsl(${'45'}, 100%, 50%` : ''}"
+                    :style="{ 'background-color': status.cycle ? `hsl(${hue}, 100%, 50%` : ''}"
+                    style="transition: all linear 2s"
                 >Cycle {{ status.cycle ? 'Off' : 'On' }}</div>
             </div>
         </div>
@@ -353,11 +354,11 @@ html {
     width: 100px;
 }
 .white {
-    margin-left: 50px;
+    margin-left: 100px;
     background: linear-gradient(#ffb459, #b6ceff);
 }
 .brightness {
-    margin-right: 50px;
+    margin-right: 100px;
     background: linear-gradient(white, #414141);
 }
 .picker {
