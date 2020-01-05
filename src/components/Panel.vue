@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed m-5" style="width: 95.5%">
+    <div class="fixed m-5 mt-10" style="width: 95.5%">
         <div class="flex justify-center">
             <div class="linear-dial brightness" ref="brightness">
                 <div
@@ -369,11 +369,11 @@ html {
     width: 100px;
 }
 .white {
-    margin-left: 100px;
+    margin-left: 250px;
     background: linear-gradient(#ffb459, #b6ceff);
 }
 .brightness {
-    margin-right: 100px;
+    margin-right: 250px;
     background: linear-gradient(white, #414141);
 }
 .picker {

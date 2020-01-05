@@ -1,7 +1,7 @@
 <template>
-    <div class="wheel">
-        <div class="selected" :style="{ transform: `rotate(${pos}deg)` }">
-            <div class="dot"></div>
+    <div class="wheel" :class="{ clicked }">
+        <div class="selected" :style="{ transform: `rotate(${pos}deg)` }" :class="{ clicked }">
+            <div class="dot" :class="{ clicked }"></div>
         </div>
         <div class="inside">
             <div class="center" :style="{ 'background-color': `hsl(${this.pos},100%,50%)` }"></div>
@@ -130,6 +130,7 @@ export default {
 
 <style scoped>
 .wheel {
+    position: fixed;
     border-radius: 50%;
     height: 300px;
     width: 300px;
@@ -143,20 +144,21 @@ export default {
         magenta,
         red
     );
+    transition: all 0.05s ease-in-out;
 }
 .inside {
-    margin: 50px 0px 0px 50px;
-    width: 200px;
-    height: 200px;
+    margin: 16.667% 0px 0px 16.667%;
+    width: 66.667%;
+    height: 66.667%;
     top: 50%;
     left: 50%;
     background-color: black;
     border-radius: 50%;
 }
 .center {
-    margin: 75px 0px 0px 75px;
-    width: 50px;
-    height: 50px;
+    margin: 37.5% 0px 0px 37.5%;
+    width: 25%;
+    height: 25%;
     top: 50%;
     left: 50%;
     border-radius: 50%;
@@ -165,21 +167,37 @@ export default {
     z-index: 1000;
 }
 .selected {
+    position: static;
     width: 300px;
     height: 300px;
     border-width: 0px;
     border-color: yellow;
     position: fixed;
+    transition: height 0.05s ease-in-out, width 0.05s ease-in-out,
+        margin 0.05s ease-in-out;
 }
 .dot {
     background-color: white;
     border-radius: 50%;
     margin-left: 137.5px;
-    margin-top: 10px;
+    margin-top: 12.5px;
     width: 25px;
     height: 25px;
     margin: 135px 0px 0px 0px 0%;
     z-index: 100;
     position: fixed;
+    transition: all 0.05s ease-in-out;
+}
+.clicked.wheel {
+    margin-top: -10px;
+    width: 320px;
+    height: 320px;
+}
+.clicked.selected {
+    width: 320px;
+    height: 320px;
+}
+.clicked.dot {
+    margin-top: 15px;
 }
 </style>
