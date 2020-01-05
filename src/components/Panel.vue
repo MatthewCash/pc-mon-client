@@ -26,7 +26,12 @@
                     class="w-full h-full p-16 rounded-lg"
                     :class="{ 'bg-gray-500': status.on_off }"
                     style="animation: 1s linear"
-                >Power {{ status.on_off ? 'Off' : 'On' }}</div>
+                >
+                    <div
+                        :class="{ 'text-loading': clicked.power }"
+                    >Power {{ status.on_off ? 'Off' : 'On' }}</div>
+                    <div v-if="clicked.power" class="loading"></div>
+                </div>
             </div>
             <div
                 @click="toggleCycle()"
@@ -37,7 +42,12 @@
                     :class="{ cycle: status.cycle }"
                     :style="{ 'background-color': status.cycle ? `hsl(${hue}, 100%, 50%` : ''}"
                     style="transition: all linear 2s"
-                >Cycle {{ status.cycle ? 'Off' : 'On' }}</div>
+                >
+                    <div
+                        :class="{ 'text-loading': clicked.cycle }"
+                    >Cycle {{ status.cycle ? 'Off' : 'On' }}</div>
+                    <div v-if="clicked.cycle" class="loading"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -116,9 +126,11 @@ export default {
         },
         togglePower() {
             this.ws.send(JSON.stringify({ power: !this.status.on_off }));
+            this.clicked.power = true;
         },
         toggleCycle() {
             this.ws.send(JSON.stringify({ cycle: !this.status.cycle }));
+            this.clicked.cycle = true;
         },
         open(event) {
             console.log("Connected to " + this.address);
@@ -149,6 +161,9 @@ export default {
 
             if (this.canUpdate.brightness) this.brightness = parsed.brightness;
             if (this.canUpdate.white) this.white = parsed.color_temp;
+
+            this.clicked.power = false;
+            this.clicked.cycle = false;
         },
         close(event) {
             console.log("Disconnected from " + this.address);
@@ -369,5 +384,28 @@ html {
     border-radius: 5px;
     border-bottom-width: 1px;
     border-color: #414141;
+}
+.loading {
+    border-radius: 50%;
+    border-color: rgba(0, 0, 0, 0);
+    border-left-color: white;
+    border-width: 5px;
+    margin: -15px auto -15px auto;
+    height: 50px;
+    width: 50px;
+    animation: spin 0.5s linear infinite;
+}
+.text-loading {
+    color: rgba(0, 0, 0, 0);
+    line-height: 0px;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 </style>
