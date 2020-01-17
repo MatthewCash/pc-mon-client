@@ -32,7 +32,7 @@ export default {
             if (old > value && old - value > 180) old -= 360;
             if (value > old && value - old > 180) old += 360;
             new Tween({ x: old })
-                .to({ x: value }, 2200)
+                .to({ x: value }, this.cycle ? 3200 : 1000)
                 .on("update", ({ x }) => {
                     if (!this.canUpdate) return;
                     this.pos = x;

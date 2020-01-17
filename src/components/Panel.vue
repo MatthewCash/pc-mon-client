@@ -40,8 +40,7 @@
                 <div
                     class="w-full h-full p-16 rounded-lg"
                     :class="{ cycle: status.cycle }"
-                    :style="{ 'background-color': status.cycle ? `hsl(${hue}, 100%, 50%` : ''}"
-                    style="transition: all linear 2s"
+                    :style="{ 'background-color': status.cycle ? `hsl(${hue}, 100%, 50%` : '', transition: status.cycle ? 'all linear 3s' : 'all ease-in-out 1s' }"
                 >
                     <div
                         :class="{ 'text-loading': clicked.cycle }"
