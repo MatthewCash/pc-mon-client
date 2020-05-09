@@ -7,7 +7,7 @@
                 <img src="/logo.svg" class="h-24 mt-16 mx-auto" />
                 <div class="mx-auto font-mono text-center absolute bottom-0 w-full">{{ wsStatus }}</div>
             </div>
-            <div class="w-2/3 pl-6">
+            <div class="w-2/3 pl-16">
                 <div class="flex justify-center px-4">
                     <div class="w-1/2">
                         <Wheel class :cycle="status.cycle" :hue="hue" @update:hue="setHue($event)" />
