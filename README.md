@@ -1,6 +1,6 @@
 # pc-mon-client
 
-> A Vue JS Client to display data from [pc-mon-server](https://github.com/MatthewCash/pc-mon-server)
+> A Vue JS Client to display data from [light-server](https://github.com/MatthewCash/light-server)
 
 ## Production Instructions
 
