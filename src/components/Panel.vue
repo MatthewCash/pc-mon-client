@@ -23,7 +23,7 @@
                             <div class="linear-dial brightness relative" ref="brightness">
                                 <div
                                     class="picker brightness-picker absolute bottom-0"
-                                    :style="{ 'height': `${brightness * 2.81}px`, transition: clicked.brightness ? '' : 'all 0.5s ease-in-out 0s', 'background-color': absoluteColor }"
+                                    :style="{ 'height': `${brightness * 2.81}px`, transition: clicked.brightness ? '' : 'all 1s linear 0s', 'background-color': absoluteColor }"
                                 ></div>
                             </div>
                             <div class="font-mono text-center mt-5 text-lg">Brightness</div>
@@ -126,8 +126,7 @@ export default {
                 );
                 return `rgb(${red - 30}, ${green}, ${blue})`;
             }
-            return `hsl(${this.hue}, ${this.status.saturation}%, ${this.status
-                .brightness / 2}%)`;
+            return `hsl(${this.hue}, ${this.status.saturation}%, 50%)`;
         }
     },
     methods: {
