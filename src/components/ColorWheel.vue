@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { Tween, autoPlay, Easing } from "es6-tween";
+import { Tween, autoPlay, Easing } from 'es6-tween';
 autoPlay(true);
 export default {
     props: {
@@ -33,7 +33,7 @@ export default {
             if (value > old && value - old > 180) old += 360;
             new Tween({ x: old })
                 .to({ x: value }, this.cycle ? 3200 : 1000)
-                .on("update", ({ x }) => {
+                .on('update', ({ x }) => {
                     if (!this.canUpdate) return;
                     this.pos = x;
                 })
@@ -44,7 +44,7 @@ export default {
     methods: {
         setHue(hue) {
             this.pos = hue;
-            this.$emit("update:hue", hue);
+            this.$emit('update:hue', hue);
         },
         rotate(event) {
             if (!this.clicked) return;
@@ -89,51 +89,53 @@ export default {
         }
     },
     mounted() {
-        this.$el.addEventListener("touchstart", this.click, {
+        this.$el.addEventListener('touchstart', this.click, {
             passive: true
         });
-        document.addEventListener("touchend", this.unClick, {
+        document.addEventListener('touchend', this.unClick, {
             passive: true
         });
-        document.addEventListener("touchcancel", this.unClick, {
+        document.addEventListener('touchcancel', this.unClick, {
             passive: true
         });
-        document.addEventListener("touchmove", this.rotate, {
+        document.addEventListener('touchmove', this.rotate, {
             passive: false
         });
-        this.$el.addEventListener("mousedown", this.click, {
+        this.$el.addEventListener('mousedown', this.click, {
             passive: true
         });
-        document.addEventListener("mouseup", this.unClick, {
+        document.addEventListener('mouseup', this.unClick, {
             passive: true
         });
-        document.addEventListener("mouseleave", this.unClick, {
+        document.addEventListener('mouseleave', this.unClick, {
             passive: true
         });
-        document.addEventListener("mousemove", this.rotate, {
+        document.addEventListener('mousemove', this.rotate, {
             passive: false
         });
     },
     beforeDestroy() {
-        this.$el.removeEventListener("touchstart", this.click);
-        document.removeEventListener("touchend", this.unClick);
-        document.removeEventListener("touchcancel", this.unClick);
-        document.removeEventListener("touchmove", this.rotate);
-        this.$el.removeEventListener("mousedown", this.click);
-        document.removeEventListener("mouseup", this.unClick);
-        document.removeEventListener("mouseleave", this.unClick);
-        document.removeEventListener("mousemove", this.rotate);
+        this.$el.removeEventListener('touchstart', this.click);
+        document.removeEventListener('touchend', this.unClick);
+        document.removeEventListener('touchcancel', this.unClick);
+        document.removeEventListener('touchmove', this.rotate);
+        this.$el.removeEventListener('mousedown', this.click);
+        document.removeEventListener('mouseup', this.unClick);
+        document.removeEventListener('mouseleave', this.unClick);
+        document.removeEventListener('mousemove', this.rotate);
         clearTimeout(this.clickTimeout);
     }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .wheel {
+    /* margin-left: 100; */
     position: fixed;
     border-radius: 50%;
     height: 300px;
     width: 300px;
+    z-index: 1000;
     background-size: 100% 100%;
     background-image: conic-gradient(
         red,
@@ -167,7 +169,7 @@ export default {
     z-index: 1000;
 }
 .selected {
-    position: static;
+    /* position: static; */
     width: 300px;
     height: 300px;
     border-width: 0px;
@@ -185,7 +187,7 @@ export default {
     height: 25px;
     margin: 135px 0px 0px 0px 0%;
     z-index: 100;
-    position: fixed;
+    /* position: fixed; */
     transition: all 0.05s ease-in-out;
 }
 .clicked.wheel {

@@ -1,51 +1,66 @@
 <template>
-    <div class="fixed m-5 mt-10" style="width: 95.5%">
-        <div class="flex justify-center">
-            <div class="linear-dial brightness" ref="brightness">
+    <div class="fixed mt-8" style="width: 95.5%">
+        <div class="flex">
+            <div class="w-1/3 relative">
+                <div class="font-mono text-4xl text-center">Light Controls</div>
+                <hr class="my-3 mx-6" />
+                <img src="/logo.svg" class="h-24 mt-16 mx-auto" />
                 <div
-                    class="picker"
-                    :style="{ 'margin-top': `${(100 - brightness) * 2.94}px`, transition: clicked.brightness ? '' : 'all 1s ease-in-out 0s' }"
-                ></div>
+                    class="mx-auto font-mono text-center absolute bottom-0 w-full"
+                >www.matthew-cash.com</div>
             </div>
-            <Wheel :cycle="status.cycle" :hue="hue" @update:hue="setHue($event)" />
-            <div class="linear-dial white" ref="white">
-                <div
-                    class="picker"
-                    :style="{ 'margin-top': `${(white - 2500) / 22 }px`, transition: clicked.white ? '' : 'all 1s ease-in-out 0s' }"
-                ></div>
-            </div>
-        </div>
-        <hr class="my-20" />
-        <div class="flex justify-center">
-            <div
-                @click="togglePower()"
-                class="rounded-lg bg-gray-800 hover:bg-gray-700 active:bg-gray-600 p-5 mr-10"
-                style="animation: 1s linear"
-            >
-                <div
-                    class="w-full h-full p-16 rounded-lg"
-                    :class="{ 'bg-gray-500': status.on_off }"
-                    style="animation: 1s linear"
-                >
-                    <div
-                        :class="{ 'text-loading': clicked.power }"
-                    >Power {{ status.on_off ? 'Off' : 'On' }}</div>
-                    <div v-if="clicked.power" class="loading"></div>
+            <div class="w-2/3 pl-6">
+                <div class="flex justify-center px-4">
+                    <div class="w-1/2">
+                        <Wheel class :cycle="status.cycle" :hue="hue" @update:hue="setHue($event)" />
+                    </div>
+                    <div class="w-1/2 flex justify-between pl-12">
+                        <div class="linear-dial brightness" ref="brightness">
+                            <div
+                                class="picker"
+                                :style="{ 'margin-top': `${(100 - brightness) * 2.71}px`, transition: clicked.brightness ? '' : 'all 1s ease-in-out 0s' }"
+                            ></div>
+                        </div>
+                        <div class="linear-dial white" ref="white">
+                            <div
+                                class="picker"
+                                :style="{ 'margin-top': `${(white - 2500) / 24 }px`, transition: clicked.white ? '' : 'all 1s ease-in-out 0s' }"
+                            ></div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div
-                @click="toggleCycle()"
-                class="rounded-lg bg-gray-800 hover:bg-gray-700 active:bg-gray-600 p-5 mr-10"
-            >
-                <div
-                    class="w-full h-full p-16 rounded-lg"
-                    :class="{ cycle: status.cycle }"
-                    :style="{ 'background-color': status.cycle ? `hsl(${hue}, 100%, 50%` : '', transition: status.cycle ? 'all linear 3s' : 'all ease-in-out 1s' }"
-                >
+                <hr class="my-20" />
+                <div class="flex justify-center">
                     <div
-                        :class="{ 'text-loading': clicked.cycle }"
-                    >Cycle {{ status.cycle ? 'Off' : 'On' }}</div>
-                    <div v-if="clicked.cycle" class="loading"></div>
+                        @click="togglePower()"
+                        class="rounded-lg bg-gray-800 hover:bg-gray-700 active:bg-gray-600 p-5 mr-10"
+                    >
+                        <div
+                            class="w-full h-full p-16 rounded-lg"
+                            :class="{ 'bg-gray-500': status.on_off }"
+                            style="transition: all 1s linear"
+                        >
+                            <div
+                                :class="{ 'text-loading': clicked.power }"
+                            >Power {{ status.on_off ? 'Off' : 'On' }}</div>
+                            <div v-if="clicked.power" class="loading"></div>
+                        </div>
+                    </div>
+                    <div
+                        @click="toggleCycle()"
+                        class="rounded-lg bg-gray-800 hover:bg-gray-700 active:bg-gray-600 p-5"
+                    >
+                        <div
+                            class="w-full h-full p-16 rounded-lg"
+                            :class="{ cycle: status.cycle }"
+                            :style="{ 'background-color': status.cycle ? `hsl(${hue}, 100%, 50%` : '', transition: status.cycle ? 'all linear 3s' : 'all ease-in-out 1s' }"
+                        >
+                            <div
+                                :class="{ 'text-loading': clicked.cycle }"
+                            >Cycle {{ status.cycle ? 'Off' : 'On' }}</div>
+                            <div v-if="clicked.cycle" class="loading"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -53,8 +68,8 @@
 </template>
 
 <script>
-import Wheel from "./ColorWheel";
-import { Tween, autoPlay } from "es6-tween";
+import Wheel from './ColorWheel';
+import { Tween, autoPlay } from 'es6-tween';
 autoPlay(true);
 
 export default {
@@ -67,7 +82,7 @@ export default {
             white: 0,
             status: {
                 on_off: 0,
-                mode: "normal",
+                mode: 'normal',
                 hue: 0,
                 tweenedHue: 0,
                 saturation: 0,
@@ -132,27 +147,27 @@ export default {
             this.clicked.cycle = true;
         },
         open(event) {
-            console.log("Connected to " + this.address);
+            console.log('Connected to ' + this.address);
             this.cd = 1;
 
             this.pause = false;
         },
         connect() {
-            console.log("Connecting to " + this.address);
+            console.log('Connecting to ' + this.address);
             this.ws = null;
-            this.ws = new WebSocket("ws://satelite:1728");
+            this.ws = new WebSocket('ws://satelite:1728');
 
-            this.ws.addEventListener("open", this.open);
-            this.ws.addEventListener("message", this.message);
-            this.ws.addEventListener("close", this.close);
-            this.ws.addEventListener("error", this.error);
+            this.ws.addEventListener('open', this.open);
+            this.ws.addEventListener('message', this.message);
+            this.ws.addEventListener('close', this.close);
+            this.ws.addEventListener('error', this.error);
 
             this.pause = true;
         },
         message(event) {
             this.active = true;
 
-            let parsed = JSON.parse(event.data);
+            const parsed = JSON.parse(event.data);
             if (!parsed) return;
 
             this.status = parsed;
@@ -165,15 +180,15 @@ export default {
             this.clicked.cycle = false;
         },
         close(event) {
-            console.log("Disconnected from " + this.address);
+            console.log('Disconnected from ' + this.address);
 
             this.pause = true;
         },
         error(event) {
-            console.log("Error from " + this.address);
+            console.log('Error from ' + this.address);
         },
         setHue(input) {
-            let hue = Math.round(input);
+            const hue = Math.round(input);
             this.hue = hue;
             this.postColor();
         },
@@ -263,58 +278,58 @@ export default {
     },
     mounted() {
         this.$refs.brightness.addEventListener(
-            "mousedown",
+            'mousedown',
             this.brightnessClick,
             {
                 passive: true
             }
         );
-        document.addEventListener("mouseup", this.brightnessUnClick, {
+        document.addEventListener('mouseup', this.brightnessUnClick, {
             passive: true
         });
-        document.addEventListener("mousemove", this.brightnessAdjust, {
+        document.addEventListener('mousemove', this.brightnessAdjust, {
             passive: false
         });
-        document.addEventListener("mouseleave", this.brightnessUnClick, {
+        document.addEventListener('mouseleave', this.brightnessUnClick, {
             passive: true
         });
         this.$refs.brightness.addEventListener(
-            "touchstart",
+            'touchstart',
             this.brightnessClick,
             { passive: true }
         );
-        document.addEventListener("touchend", this.brightnessUnClick, {
+        document.addEventListener('touchend', this.brightnessUnClick, {
             passive: true
         });
-        document.addEventListener("touchmove", this.brightnessAdjust, {
+        document.addEventListener('touchmove', this.brightnessAdjust, {
             passive: false
         });
-        document.addEventListener("touchcancel", this.brightnessUnClick, {
+        document.addEventListener('touchcancel', this.brightnessUnClick, {
             passive: true
         });
 
-        this.$refs.white.addEventListener("mousedown", this.whiteClick, {
+        this.$refs.white.addEventListener('mousedown', this.whiteClick, {
             passive: true
         });
-        document.addEventListener("mouseup", this.whiteUnClick, {
+        document.addEventListener('mouseup', this.whiteUnClick, {
             passive: true
         });
-        document.addEventListener("mousemove", this.whiteAdjust, {
+        document.addEventListener('mousemove', this.whiteAdjust, {
             passive: false
         });
-        document.addEventListener("mouseleave", this.whiteUnClick, {
+        document.addEventListener('mouseleave', this.whiteUnClick, {
             passive: true
         });
-        this.$refs.white.addEventListener("touchstart", this.whiteClick, {
+        this.$refs.white.addEventListener('touchstart', this.whiteClick, {
             passive: true
         });
-        document.addEventListener("touchend", this.whiteUnClick, {
+        document.addEventListener('touchend', this.whiteUnClick, {
             passive: true
         });
-        document.addEventListener("touchmove", this.whiteAdjust, {
+        document.addEventListener('touchmove', this.whiteAdjust, {
             passive: false
         });
-        document.addEventListener("touchcancel", this.whiteUnClick, {
+        document.addEventListener('touchcancel', this.whiteUnClick, {
             passive: true
         });
     },
@@ -324,55 +339,49 @@ export default {
         clearInterval(this.deadInterval);
         this.ws.close();
         this.$refs.brightness.addEventListener(
-            "mousedown",
+            'mousedown',
             this.brightnessClick,
             {
                 passive: true
             }
         );
-        document.removeEventListener("mouseup", this.brightnessUnClick);
-        document.removeEventListener("mousemove", this.brightnessAdjust);
-        document.removeEventListener("mouseleave", this.brightnessUnClick);
+        document.removeEventListener('mouseup', this.brightnessUnClick);
+        document.removeEventListener('mousemove', this.brightnessAdjust);
+        document.removeEventListener('mouseleave', this.brightnessUnClick);
         this.$refs.brightness.removeEventListener(
-            "touchstart",
+            'touchstart',
             this.brightnessClick
         );
-        document.removeEventListener("tochend", this.brightnessUnClick);
-        document.removeEventListener("touchmove", this.brightnessAdjust);
-        document.removeEventListener("touchcancel", this.brightnessUnClick);
+        document.removeEventListener('tochend', this.brightnessUnClick);
+        document.removeEventListener('touchmove', this.brightnessAdjust);
+        document.removeEventListener('touchcancel', this.brightnessUnClick);
 
-        this.$refs.white.removeEventListener("mousedown", this.whiteClick);
-        document.removeEventListener("mouseup", this.whiteUnClick);
-        document.removeEventListener("mousemove", this.whiteAdjust);
-        document.removeEventListener("mouseleave", this.whiteUnClick);
-        this.$refs.white.removeEventListener("touchstart", this.whiteClick);
-        document.removeEventListener("tochend", this.whiteUnClick);
-        document.removeEventListener("touchmove", this.whiteAdjust);
-        document.removeEventListener("touchcancel", this.whiteUnClick);
+        this.$refs.white.removeEventListener('mousedown', this.whiteClick);
+        document.removeEventListener('mouseup', this.whiteUnClick);
+        document.removeEventListener('mousemove', this.whiteAdjust);
+        document.removeEventListener('mouseleave', this.whiteUnClick);
+        this.$refs.white.removeEventListener('touchstart', this.whiteClick);
+        document.removeEventListener('tochend', this.whiteUnClick);
+        document.removeEventListener('touchmove', this.whiteAdjust);
+        document.removeEventListener('touchcancel', this.whiteUnClick);
     }
 };
 </script>
 
 <style scoped>
-html {
-    box-sizing: border-box;
-}
-*,
-*:before,
-*:after {
-    box-sizing: inherit;
-}
 .linear-dial {
     border-radius: 30px;
+    border-width: 10px;
+    border-color: #2d3748;
     height: 300px;
     width: 100px;
 }
 .white {
-    margin-left: 250px;
+    /* margin-left: 250px; */
     background: linear-gradient(#ffb459, #b6ceff);
 }
 .brightness {
-    margin-right: 250px;
+    /* margin-right: 250px; */
     background: linear-gradient(white, #414141);
 }
 .picker {

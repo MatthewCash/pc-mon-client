@@ -1,18 +1,17 @@
 <template>
     <div class="h-screen w-screen max-h-screen max-w-screen">
-        <Device v-if="!panel" v-hammer:swipe="openPanel" address="inferno:10180" secure="false" />
-        <Panel v-if="panel" v-hammer:swipe.left="closePanel" />
+        <!-- <Device v-if="panel" v-hammer:swipe="openPanel" address="inferno:10180" secure="false" /> -->
+        <Panel />
     </div>
 </template>
 
 <script>
-import Device from "./components/Device.vue";
-import Panel from "./components/Panel.vue";
+// import Device from "./components/Device.vue";
+import Panel from './components/Panel.vue';
 
 export default {
-    name: "app",
+    name: 'app',
     components: {
-        Device,
         Panel
     },
     data() {
