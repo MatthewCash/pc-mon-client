@@ -402,17 +402,14 @@ export default {
     width: 100px;
 }
 .white {
-    /* margin-left: 250px; */
     background: linear-gradient(#ffb459, #b6ceff);
 }
 .brightness {
-    /* margin-right: 250px; */
     background-color: rgb(37, 37, 37);
-    /* background: linear-gradient(white, #414141); */
 }
 .picker {
     height: 10px;
-    width: 100px;
+    width: 80px;
     margin-top: 50px;
     background-color: rgb(235, 235, 235);
     border-radius: 5px;
