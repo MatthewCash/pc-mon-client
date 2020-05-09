@@ -5,9 +5,7 @@
                 <div class="font-mono text-4xl text-center">Light Controls</div>
                 <hr class="my-3 mx-6" />
                 <img src="/logo.svg" class="h-24 mt-16 mx-auto" />
-                <div
-                    class="mx-auto font-mono text-center absolute bottom-0 w-full"
-                >www.matthew-cash.com</div>
+                <div class="mx-auto font-mono text-center absolute bottom-0 w-full">{{ wsStatus }}</div>
             </div>
             <div class="w-2/3 pl-6">
                 <div class="flex justify-center px-4">
@@ -77,6 +75,7 @@ export default {
     data() {
         return {
             ws: { readyState: 3 },
+            wsStatus: 'Connecting...',
             hue: 0,
             brightness: 0,
             white: 0,
@@ -147,6 +146,7 @@ export default {
             this.clicked.cycle = true;
         },
         open(event) {
+            this.wsStatus = 'WebSocket Connected';
             console.log('Connected to ' + process.env.VUE_APP_WS_URL);
             this.cd = 1;
 
@@ -154,6 +154,7 @@ export default {
         },
         connect() {
             console.log('Connecting to ' + process.env.VUE_APP_WS_URL);
+            this.wsStatus = 'Connecting...';
             this.ws = null;
             this.ws = new WebSocket(process.env.VUE_APP_WS_URL);
 
