@@ -1,7 +1,7 @@
 <template>
     <div class="wheel" :class="{ clicked }">
         <div class="selected" :style="{ transform: `rotate(${pos}deg)` }" :class="{ clicked }">
-            <div class="dot" :class="{ clicked }"></div>
+            <div v-show="showDot" class="dot" :class="{ clicked }"></div>
         </div>
         <div class="inside">
             <div class="center" :style="{ 'background-color': `hsl(${this.pos},100%,50%)` }"></div>
@@ -15,7 +15,8 @@ autoPlay(true);
 export default {
     props: {
         hue: Number,
-        cycle: Boolean
+        cycle: Boolean,
+        active: Boolean
     },
     data() {
         return {
@@ -24,6 +25,11 @@ export default {
             prevAngle: null,
             canUpdate: true
         };
+    },
+    computed: {
+        showDot() {
+            return this.clicked || this.active;
+        }
     },
     watch: {
         hue(value) {

@@ -8,26 +8,38 @@
                 <div class="mx-auto font-mono text-center absolute bottom-0 w-full">{{ wsStatus }}</div>
             </div>
             <div class="w-2/3 pl-16">
-                <div class="flex justify-center px-4">
+                <div class="flex justify-center px-12">
                     <div class="w-1/2">
-                        <Wheel class :cycle="status.cycle" :hue="hue" @update:hue="setHue($event)" />
+                        <Wheel
+                            class
+                            :cycle="status.cycle"
+                            :hue="hue"
+                            :active="!white"
+                            @update:hue="setHue($event)"
+                        />
                     </div>
                     <div class="w-1/2 flex justify-between pl-12">
-                        <div class="linear-dial brightness" ref="brightness">
-                            <div
-                                class="picker"
-                                :style="{ 'margin-top': `${(100 - brightness) * 2.71}px`, transition: clicked.brightness ? '' : 'all 1s ease-in-out 0s' }"
-                            ></div>
+                        <div>
+                            <div class="linear-dial brightness relative" ref="brightness">
+                                <div
+                                    class="picker brightness-picker absolute bottom-0"
+                                    :style="{ 'height': `${brightness * 2.81}px`, transition: clicked.brightness ? '' : 'all 0.5s ease-in-out 0s', 'background-color': absoluteColor }"
+                                ></div>
+                            </div>
+                            <div class="font-mono text-center mt-5 text-lg">Brightness</div>
                         </div>
-                        <div class="linear-dial white" ref="white">
-                            <div
-                                class="picker"
-                                :style="{ 'margin-top': `${(white - 2500) / 24 }px`, transition: clicked.white ? '' : 'all 1s ease-in-out 0s' }"
-                            ></div>
+                        <div>
+                            <div class="linear-dial white" ref="white">
+                                <div
+                                    class="picker"
+                                    :style="{ 'margin-top': `${(white - 2500) / 24 }px`, transition: clicked.white ? '' : 'all 1s ease-in-out 0s' }"
+                                ></div>
+                            </div>
+                            <div class="font-mono text-center mt-5 text-lg">Color Temp</div>
                         </div>
                     </div>
                 </div>
-                <hr class="my-20" />
+                <hr class="mb-12 mt-12" />
                 <div class="flex justify-center">
                     <div
                         @click="togglePower()"
@@ -68,6 +80,7 @@
 <script>
 import Wheel from './ColorWheel';
 import { Tween, autoPlay } from 'es6-tween';
+import ct from 'color-temperature';
 autoPlay(true);
 
 export default {
@@ -104,6 +117,18 @@ export default {
                 white: true
             }
         };
+    },
+    computed: {
+        absoluteColor() {
+            if (this.white) {
+                const { red, green, blue } = ct.colorTemperature2rgb(
+                    this.white
+                );
+                return `rgb(${red - 30}, ${green}, ${blue})`;
+            }
+            return `hsl(${this.hue}, ${this.status.saturation}%, ${this.status
+                .brightness / 2}%)`;
+        }
     },
     methods: {
         throttle(func, wait, options) {
@@ -383,7 +408,8 @@ export default {
 }
 .brightness {
     /* margin-right: 250px; */
-    background: linear-gradient(white, #414141);
+    background-color: rgb(37, 37, 37);
+    /* background: linear-gradient(white, #414141); */
 }
 .picker {
     height: 10px;
@@ -393,6 +419,9 @@ export default {
     border-radius: 5px;
     border-bottom-width: 1px;
     border-color: #414141;
+}
+.brightness-picker {
+    margin-top: 0px;
 }
 .loading {
     border-radius: 50%;

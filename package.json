@@ -11,6 +11,7 @@
         "canvas": "^2.6.1",
         "chart.js": "^2.9.3",
         "chartjs-plugin-streaming": "^1.8.0",
+        "color-temperature": "^0.2.7",
         "core-js": "^2.6.11",
         "es6-tween": "^5.5.11",
         "tailwindcss": "^1.4.6",
