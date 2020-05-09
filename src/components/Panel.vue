@@ -147,15 +147,15 @@ export default {
             this.clicked.cycle = true;
         },
         open(event) {
-            console.log('Connected to ' + this.address);
+            console.log('Connected to ' + process.env.VUE_APP_WS_URL);
             this.cd = 1;
 
             this.pause = false;
         },
         connect() {
-            console.log('Connecting to ' + this.address);
+            console.log('Connecting to ' + process.env.VUE_APP_WS_URL);
             this.ws = null;
-            this.ws = new WebSocket('ws://satelite:1728');
+            this.ws = new WebSocket(process.env.VUE_APP_WS_URL);
 
             this.ws.addEventListener('open', this.open);
             this.ws.addEventListener('message', this.message);
