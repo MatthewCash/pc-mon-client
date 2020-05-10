@@ -153,6 +153,8 @@ export default {
         red
     );
     transition: all 0.05s ease-in-out;
+    border-width: 10px;
+    border-color: #2d3748;
 }
 .inside {
     margin: 16.667% 0px 0px 16.667%;
@@ -161,26 +163,25 @@ export default {
     top: 50%;
     left: 50%;
     background-color: black;
+    border-width: 10px;
+    border-color: #2d3748;
     border-radius: 50%;
 }
 .center {
-    margin: 37.5% 0px 0px 37.5%;
-    width: 25%;
-    height: 25%;
-    top: 50%;
-    left: 50%;
+    margin: calc(50% - 40% / 2);
+    width: 40%;
+    height: 40%;
     border-radius: 50%;
-    border-width: 5px;
-    border-color: white;
+    border-width: 10px;
+    border-color: #2d3748;
     z-index: 1000;
 }
 .selected {
     /* position: static; */
     width: 300px;
     height: 300px;
-    border-width: 0px;
-    border-color: yellow;
     position: fixed;
+    margin: -10px;
     transition: height 0.05s ease-in-out, width 0.05s ease-in-out,
         margin 0.05s ease-in-out;
 }
@@ -188,7 +189,7 @@ export default {
     background-color: white;
     border-radius: 50%;
     margin-left: 137.5px;
-    margin-top: 12.5px;
+    margin-top: 21px;
     width: 25px;
     height: 25px;
     margin: 135px 0px 0px 0px 0%;
@@ -197,7 +198,7 @@ export default {
     transition: all 0.05s ease-in-out;
 }
 .clicked.wheel {
-    margin-top: -10px;
+    margin: -10px;
     width: 320px;
     height: 320px;
 }
@@ -206,6 +207,6 @@ export default {
     height: 320px;
 }
 .clicked.dot {
-    margin-top: 15px;
+    margin-top: 25px;
 }
 </style>

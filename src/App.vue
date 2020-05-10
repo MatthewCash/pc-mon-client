@@ -1,6 +1,5 @@
 <template>
-    <div class="h-screen w-screen max-h-screen max-w-screen">
-        <!-- <Device v-if="panel" v-hammer:swipe="openPanel" address="inferno:10180" secure="false" /> -->
+    <div class="h-screen w-screen max-h-screen max-w-screen select-none">
         <Panel />
     </div>
 </template>
@@ -13,21 +12,6 @@ export default {
     name: 'app',
     components: {
         Panel
-    },
-    data() {
-        return {
-            panel: false
-        };
-    },
-    methods: {
-        openPanel() {
-            this.panel = true;
-            // this.panelTimeout = setTimeout(() => void this.closePanel(), 20000);
-        },
-        closePanel() {
-            this.panel = false;
-            // clearTimeout(this.panelTimeout);
-        }
     }
 };
 </script>
