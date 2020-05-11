@@ -1,17 +1,23 @@
 <template>
     <div class="wheel" :class="{ clicked }">
-        <div class="selected" :style="{ transform: `rotate(${pos}deg)` }" :class="{ clicked }">
+        <div
+            class="selected"
+            :style="{ transform: `rotate(${pos}deg)` }"
+            :class="{ clicked, 'cycle-transition': cycle && canUpdate, 'transition': canUpdate && !cycle }"
+        >
             <div v-show="showDot" class="dot" :class="{ clicked }"></div>
         </div>
         <div class="inside">
-            <div class="center" :style="{ 'background-color': `hsl(${this.pos},100%,50%)` }"></div>
+            <div
+                class="center"
+                :class="{ 'cycle-transition': cycle && canUpdate, 'transition': canUpdate && !cycle }"
+                :style="{ 'background-color': `hsl(${this.pos},100%,50%)` }"
+            ></div>
         </div>
     </div>
 </template>
 
 <script>
-import { Tween, autoPlay, Easing } from 'es6-tween';
-autoPlay(true);
 export default {
     props: {
         hue: Number,
@@ -32,19 +38,27 @@ export default {
         }
     },
     watch: {
-        hue(value) {
+        hue(hue, oldHue) {
             if (!this.canUpdate) return;
-            let old = this.pos;
-            if (old > value && old - value > 180) old -= 360;
-            if (value > old && value - old > 180) old += 360;
-            new Tween({ x: old })
-                .to({ x: value }, this.cycle ? 3200 : 1000)
-                .on('update', ({ x }) => {
-                    if (!this.canUpdate) return;
-                    this.pos = x;
-                })
-                .easing(this.cycle ? Easing.Linear : Easing.Quadratic.InOut)
-                .start();
+            const oldPos = this.pos;
+
+            if (hue < oldHue) {
+                if (oldHue - hue < 180) {
+                    // Left
+                    this.pos = Math.floor(oldPos / 360) * 360 + hue;
+                } else {
+                    // Right over 0
+                    this.pos = oldPos + 360 + (hue - oldHue);
+                }
+            } else {
+                if (hue - oldHue < 180) {
+                    // Right
+                    this.pos = Math.floor(oldPos / 360) * 360 + hue;
+                } else {
+                    // Left over 0
+                    this.pos = oldPos - 360 + (hue - oldHue);
+                }
+            }
         }
     },
     methods: {
@@ -208,5 +222,11 @@ export default {
 }
 .clicked.dot {
     margin-top: 25px;
+}
+.cycle-transition {
+    transition: all 3.2s linear;
+}
+.transition {
+    transition: all 1s ease-in-out;
 }
 </style>
