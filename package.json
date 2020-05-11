@@ -1,6 +1,6 @@
 {
-    "name": "pc-mon-client",
-    "version": "0.1.0",
+    "name": "device-display",
+    "version": "1.0.0",
     "private": true,
     "scripts": {
         "serve": "vue-cli-service serve",
