@@ -34,7 +34,7 @@ export default {
     },
     computed: {
         showDot() {
-            return this.clicked || this.active;
+            return this.clicked || this.active || this.cycle;
         }
     },
     watch: {
