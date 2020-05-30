@@ -172,7 +172,7 @@ export default {
             this.clicked.cycle = true;
         },
         open(event) {
-            this.wsStatus = 'WebSocket Connected';
+            // this.wsStatus = 'WebSocket Connected';
             console.log('Connected to ' + process.env.VUE_APP_WS_URL);
             this.cd = 1;
 
@@ -193,9 +193,14 @@ export default {
         },
         message(event) {
             this.active = true;
-
-            const parsed = JSON.parse(event.data);
+            let parsed;
+            try {
+                parsed = JSON.parse(event.data);
+            } catch {
+                return (this.wsStatus = 'No Bulbs Detected');
+            }
             if (!parsed) return;
+            this.wsStatus = 'WebSocket Connected';
 
             this.status = parsed;
             this.hue = parsed.hue;
