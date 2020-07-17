@@ -79,7 +79,9 @@
 
 <script>
 import Wheel from './ColorWheel';
+import { Tween, autoPlay } from 'es6-tween';
 import ct from 'color-temperature';
+autoPlay(true);
 
 export default {
     components: { Wheel },
@@ -94,6 +96,7 @@ export default {
                 on_off: 0,
                 mode: 'normal',
                 hue: 0,
+                tweenedHue: 0,
                 saturation: 0,
                 color_temp: 0,
                 brightness: 0,
