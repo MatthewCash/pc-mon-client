@@ -43,7 +43,7 @@
                 <div class="flex justify-center">
                     <div
                         @click="togglePower()"
-                        class="rounded-lg bg-gray-800 hover:bg-gray-700 active:bg-gray-600 p-5 mr-10"
+                        class="rounded-lg bg-gray-800 hover:bg-gray-700 p-5 mr-10"
                     >
                         <div
                             class="w-full h-full p-16 rounded-lg"
@@ -58,7 +58,7 @@
                     </div>
                     <div
                         @click="toggleCycle()"
-                        class="rounded-lg bg-gray-800 hover:bg-gray-700 active:bg-gray-600 p-5"
+                        class="rounded-lg bg-gray-800 hover:bg-gray-700 p-5"
                     >
                         <div
                             class="w-full h-full p-16 rounded-lg"
