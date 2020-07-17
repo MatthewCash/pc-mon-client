@@ -12,13 +12,12 @@
         "chart.js": "^2.9.3",
         "chartjs-plugin-streaming": "^1.8.0",
         "color-temperature": "^0.2.7",
-        "core-js": "^2.6.11",
         "es6-tween": "^5.5.11",
-        "tailwindcss": "^1.4.6",
+        "tailwindcss": "^1.5.1",
         "vue": "^2.6.11",
         "vue-chartjs": "^3.5.0",
         "vue2-hammer": "^2.1.2",
-        "vuex": "^3.3.0"
+        "vuex": "^3.5.1"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "^3.12.1",
