@@ -2,7 +2,7 @@
     <div class="fixed mt-8" style="width: 95.5%">
         <div class="flex">
             <div class="w-1/3 relative">
-                <div class="font-mono text-4xl text-center">Light Controls</div>
+                <div @click="showIP()" class="font-mono text-4xl text-center">Light Controls</div>
                 <hr class="my-3 mx-6" />
                 <img src="/logo.svg" class="h-24 mt-16 mx-auto" />
                 <div class="mx-auto font-mono text-center absolute bottom-0 w-full">{{ wsStatus }}</div>
@@ -140,13 +140,13 @@ export default {
             var timeout = null;
             var previous = 0;
             if (!options) options = {};
-            var later = function() {
+            var later = function () {
                 previous = options.leading === false ? 0 : Date.now();
                 timeout = null;
                 result = func.apply(context, args);
                 if (!timeout) context = args = null;
             };
-            return function() {
+            return function () {
                 var now = Date.now();
                 if (!previous && options.leading === false) previous = now;
                 var remaining = wait - (now - previous);
@@ -166,6 +166,27 @@ export default {
                 return result;
             };
         },
+        async showIP() {
+            const findLocalIp = await new Promise(resolve => {
+                window.RTCPeerConnection = window.RTCPeerConnection;
+
+                const pc = new RTCPeerConnection();
+                const ips = [];
+
+                pc.createDataChannel('');
+                pc.createOffer()
+                    .then(offer => pc.setLocalDescription(offer))
+                    .catch(err => reject(err));
+                pc.onicecandidate = event => {
+                    if (!event || !event.candidate) return;
+                    const parts = event.candidate.candidate.split(' ');
+                    const [base, componentId, protocol, priority, ip] = parts;
+
+                    resolve(ip);
+                };
+            });
+            alert(findLocalIp);
+        },
         togglePower() {
             this.ws.send(JSON.stringify({ power: !this.status.on_off }));
             this.clicked.power = true;
@@ -184,7 +205,6 @@ export default {
         connect() {
             console.log('Connecting to ' + process.env.VUE_APP_WS_URL);
             this.wsStatus = 'Connecting...';
-            this.ws = null;
             this.ws = new WebSocket(process.env.VUE_APP_WS_URL);
 
             this.ws.addEventListener('open', this.open);
