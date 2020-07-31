@@ -4,7 +4,10 @@
             <div v-show="showDot" class="dot" :class="{ clicked }"></div>
         </div>
         <div class="inside">
-            <div class="center" :style="{ 'background-color': `hsl(${this.pos},100%,50%)` }"></div>
+            <div
+                class="center"
+                :style="{ 'background-color': cycle ? `hsl(${this.pos},100%,50%)` : absolute}"
+            ></div>
         </div>
     </div>
 </template>
@@ -16,7 +19,8 @@ export default {
     props: {
         hue: Number,
         cycle: Boolean,
-        active: Boolean
+        active: Boolean,
+        absolute: String
     },
     data() {
         return {

@@ -15,6 +15,7 @@
                             :cycle="status.cycle"
                             :hue="hue"
                             :active="!white"
+                            :absolute="absoluteColor"
                             @update:hue="setHue($event)"
                         />
                     </div>
@@ -168,8 +169,6 @@ export default {
         },
         async showIP() {
             const findLocalIp = await new Promise(resolve => {
-                window.RTCPeerConnection = window.RTCPeerConnection;
-
                 const pc = new RTCPeerConnection();
                 const ips = [];
 
