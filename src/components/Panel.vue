@@ -42,10 +42,7 @@
                 </div>
                 <hr class="mb-12 mt-12" />
                 <div class="flex justify-center">
-                    <div
-                        @click="togglePower()"
-                        class="rounded-lg bg-gray-800 hover:bg-gray-700 p-5 mr-10"
-                    >
+                    <div @click="togglePower()" class="rounded-lg bg-gray-800 p-5 mr-10">
                         <div
                             class="w-full h-full p-16 rounded-lg"
                             :class="{ 'bg-gray-500': status.on_off }"
@@ -57,10 +54,7 @@
                             <div v-if="clicked.power" class="loading"></div>
                         </div>
                     </div>
-                    <div
-                        @click="toggleCycle()"
-                        class="rounded-lg bg-gray-800 hover:bg-gray-700 p-5"
-                    >
+                    <div @click="toggleCycle()" class="rounded-lg bg-gray-800 p-5">
                         <div
                             class="w-full h-full p-16 rounded-lg"
                             :class="{ cycle: status.cycle }"
