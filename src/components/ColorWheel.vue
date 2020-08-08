@@ -76,16 +76,7 @@ export default {
                     180) /
                     Math.PI +
                 90;
-
-            if (this.prevAngle == null) return (this.prevAngle = mouseAngle);
-            let changeAngle = mouseAngle - this.prevAngle + this.pos;
-
-            while (changeAngle >= 360) changeAngle -= 360;
-            while (changeAngle < 0) changeAngle += 360;
-
-            this.setHue(changeAngle);
-
-            this.prevAngle = mouseAngle;
+            this.setHue(mouseAngle);
         },
         click() {
             this.clicked = true;
