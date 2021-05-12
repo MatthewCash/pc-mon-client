@@ -9,7 +9,7 @@
     "dependencies": {
         "axios": "^0.21.1",
         "canvas": "^2.6.1",
-        "chart.js": "^2.9.3",
+        "chart.js": "^2.9.4",
         "chartjs-plugin-streaming": "^1.8.0",
         "color-temperature": "^0.2.7",
         "es6-tween": "^5.5.11",
